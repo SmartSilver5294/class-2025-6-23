@@ -4,3 +4,31 @@ author: "Ayush Chandra"
 format: html
 ---
 
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(readr)
+
+```
+```{r}
+#| message: false
+#| echo: false
+library(ggplot2)
+library(dplyr)
+
+nyc_tracts <- read_csv("nyc_tracts.csv")
+nyc_summary <- nyc_tracts %>%
+  group_by(race) %>%
+  summarise(mean_income = mean(med_income, na.rm = TRUE)) %>%
+  arrange(desc(mean_income))
+
+# Plot
+ggplot(nyc_summary, aes(x = reorder(race, -mean_income), y = mean_income, fill = race)) +
+  geom_col() +
+  labs(title = "Average Median Income by Race in NYC Census Tracts",
+       x = "Race",
+       y = "Average Median Income (USD)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
